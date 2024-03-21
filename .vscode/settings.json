@@ -8,25 +8,7 @@
     "workbench.tree.enableStickyScroll": true,
     "workbench.list.smoothScrolling": true,
 
-    "fileheader.customMade": {
-        "Description": "",
-        "Author": "Quyicheng",
-        "Date": "Do not edit",
-        "LastEditors": "Quyicheng",
-        "LastEditTime": "Do not edit",
-    },
-    "fileheader.configObj": {
-        "wideSame": true,
-        "functionWideNum": 0,
-        "specialOptions":{
-            "Description": "brief",
-        }
-    },
-    "fileheader.cursorMode":{
-        "Description": "",
-        "param": "",
-        "return": ""
-    },
+    
     "files.associations": {
         "cctype": "cpp",
         "clocale": "cpp",
@@ -103,8 +85,19 @@
         "/root/catkin_ws/devel/lib/python2.7/dist-packages",
         "/opt/ros/melodic/lib/python2.7/dist-packages"
     ],
-    "Codegeex.Chat.LanguagePreference": "中文",
-    "Codegeex.SidebarUI.LanguagePreference": "中文",
-    "Codegeex.Comment.LanguagePreference": "English",
-    "Codegeex.GenerationPreference": "line by line",
+    "doxdocgen.c.commentPrefix": " * ",
+    "doxdocgen.c.firstLine": "/**",
+    "doxdocgen.c.lastLine": " */",
+    "doxdocgen.file.fileOrder": [
+        "file",
+        "author",
+        "brief",
+        // "version",
+        "date",
+        // "copyright"
+    ],
+    "doxdocgen.generic.authorEmail": "718257480@qq.com",
+    "doxdocgen.generic.authorName": "Peng XianKang",
+    "doxdocgen.generic.dateFormat": "YYYY-MM-DD",
+    // 其他配置...    
 }
