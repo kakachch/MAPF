@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mapf_planner</name>
+  <version>0.0.0</version>
+  <description>The mapf_planner package</description>
+  <maintainer email="root@todo.todo">root</maintainer>
+  <license>TODO</license>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>mapf_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>costmap_2d</depend>
+  <depend>pluginlib</depend>
+  <depend>base_local_planner</depend>
+  <depend>nav_core</depend>
+  <depend>mapf_environment</depend>
+
+  <export>
+    <mapf_planner plugin="${prefix}/mapf_planner_plugin.xml" />
+    <nav_core plugin = "${prefix}/blp_plugin.xml"/>
+  </export>
+</package>

@@ -1,0 +1,7 @@
+<library path="lib/libmapf_planner">
+    <class name="mapf_planner/SimpleLocalPlanner" type="mapf_planner::SimpleLocalPlanner" base_class_type="nav_core::BaseLocalPlanner">
+      <description>
+        A implementation of simple local planner.
+      </description>
+    </class>
+  </library>
