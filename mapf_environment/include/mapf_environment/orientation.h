@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <cmath>
+#define M_PI 3.1415926535
 namespace mapf_environment
 {
     const int LEFT = 0;
