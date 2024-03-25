@@ -75,15 +75,18 @@ namespace mapf_planner
     {
     public:
         AStar(Constraint &constraint, mapf_environment::BaseEnvironment *env);
+        //用于cbs底层单机器人的路径搜索
+        //或者用于较为精确估计任务消耗的cost(solution.cost)
         bool search(const Pose &start_pose, const Pose &goal_pose, Solution_t &solution);
 
     private:
         void reconstruct_path(std::unordered_map<State, State> &came_from, State current, std::vector<State> &solution_states);
-
+        //计算点与点的曼哈顿距离
+        //用于简单估计任务所耗费的cost
         double admissible_heuristic(const int &current_location, const int &goal_location);
 
         bool getNeighborStates(const State &state, std::vector<State> &neighbor_states, std::vector<double> &costs);
-
+        
         Constraint constraint_;
 
         mapf_environment::BaseEnvironment *env_;
