@@ -35,9 +35,10 @@ namespace task_schedule
 
     //任务调度：输入一组任务和机器人；输出任务对应的机器人ID
     void taskSchedule::assignTasks(std::vector<Task> &tasks, std::vector<Robot> &robots) 
-    {
+    {   
+        setTaskCost(tasks);
         //先按优先级升序排序，在按任务的cost降序排序
-        std::sort(tasks.begin(), tasks.end(), compareTasks);
+        
         
 
     }
