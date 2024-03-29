@@ -1,8 +1,14 @@
-#include "pso.h"
+/**
+ * @file pso.cpp
+ * @author Peng XianKang (718257480@qq.com)
+ * @brief 
+ * @date 2024-03-28
+ */
+#include "task_schedule/pso.h"
 namespace task_schedule 
 {
     
-    std::vector<Particle> initializeSwarm(size_t numParticles, std::vector<Task> tasks, std::vector<Robot> robots, mapf_environment::BaseEnvironment *env) 
+    std::vector<Particle> initializeSwarm(size_t numParticles,const std::vector<Task> &tasks,const std::vector<Robot> &robots, mapf_environment::BaseEnvironment *env) 
     {
         std::vector<Particle> swarm;
         for (size_t i = 0; i < numParticles; ++i) 
@@ -41,6 +47,10 @@ namespace task_schedule
 
         for(size_t i = 0; i < robotsTaskAssignments.size(); ++i) 
         {
+            if(robotsTaskAssignments[i].size() == 0)
+            {
+                continue;
+            }
             double taskCompletionCost = 0.0;
             int start_location = robots[i].location;
             int goal_location = tasks[robotsTaskAssignments[i][0]].start_location;
@@ -91,16 +101,16 @@ namespace task_schedule
             double newVelocity = w * particle.velocity[i] + cognitiveComponent + socialComponent;
             
             // 更新速度，同时限制速度的范围
-            if (newVelocity < -10.0) {
-                particle.velocity[i] = -10.0; // 如果速度小于-10，则设置为-10
-            } else if (newVelocity > 10.0) {
-                particle.velocity[i] = 10.0; // 如果速度大于10，则设置为10
+            if (newVelocity < -1.0) {
+                particle.velocity[i] = -1.0; // 如果速度小于-10，则设置为-10
+            } else if (newVelocity > 1.0) {
+                particle.velocity[i] = 1.0; // 如果速度大于10，则设置为10
             } else {
                 particle.velocity[i] = newVelocity; // 否则，保持原始速度值
             }
 
             // 计算新的任务分配
-            int newTaskAssignment = particle.taskAssignment[i] + static_cast<int>(newVelocity);
+            int newTaskAssignment = particle.taskAssignment[i] + static_cast<int>(particle.velocity[i]);
             // 检查并限制新任务分配的值
             if (newTaskAssignment < 0) {
                 newTaskAssignment = 0; // 如果结果小于0，则限制为最小值
@@ -109,16 +119,10 @@ namespace task_schedule
             }
             // 更新粒子的任务分配
             particle.taskAssignment[i] = newTaskAssignment;
-
-            if (newTaskAssignment != particle.taskAssignment[i]) {
-                particle.taskAssignment[i] = newTaskAssignment;
-                // 这里可能需要检查新分配是否有效，例如没有违反任务和机器人的约束
-            }
         }
 
         // 重新计算适应度
         particle.fitness = calculateFitness(particle.taskAssignment, tasks, robots, env);
-
         // 更新个体最优
         if (particle.fitness > particle.bestFitness) 
         {
@@ -130,29 +134,38 @@ namespace task_schedule
 
 
     // 粒子群算法主循环
-void particleSwarmOptimization(const std::vector<Task>& tasks, const std::vector<Robot>& robots, size_t numParticles, int maxIterations, mapf_environment::BaseEnvironment *env) {
-    std::vector<Particle> swarm = initializeSwarm(numParticles, tasks, robots, env);
-    for (int iteration = 0; iteration < maxIterations; ++iteration) 
+    std::vector<std::vector<int>> particleSwarmOptimization(const std::vector<Task>& tasks, const std::vector<Robot>& robots, size_t numParticles, int maxIterations, mapf_environment::BaseEnvironment *env) 
     {
-        for (Particle& particle : swarm) 
+        std::vector<Particle> swarm = initializeSwarm(numParticles, tasks, robots, env);
+        for (int iteration = 0; iteration < maxIterations; ++iteration) 
         {
-            updateVelocityAndPosition(particle, swarm, tasks, robots, env);
+            for (Particle& particle : swarm) 
+            {
+                updateVelocityAndPosition(particle, swarm, tasks, robots, env);
+            }
+            // 检查停止条件，例如适应度不再显著改善
+            
         }
-        // 检查停止条件，例如适应度不再显著改善
-        // ...
-    }
-    // 输出最终的最优解
-    double bestFitness = std::numeric_limits<double>::max();
-    std::vector<int> bestTaskAssignment;
-    for (const Particle& p : swarm) 
-    {
-        if (p.bestFitness < bestFitness) 
+        // 输出最终的最优解
+        double bestFitness = std::numeric_limits<double>::max();
+        std::vector<int> bestTaskAssignment;
+        std::vector<std::vector<int>> robotsTaskAssignments(robots.size());
+        for (const Particle& p : swarm) 
         {
-            bestFitness = p.bestFitness;
-            bestTaskAssignment = p.bestTaskAssignment;
+            if (p.bestFitness < bestFitness) 
+            {
+                bestFitness = p.bestFitness;
+                bestTaskAssignment = p.bestTaskAssignment;
+            }
         }
+        for(size_t i = 0; i < bestTaskAssignment.size(); ++i) 
+        {
+            int robot_id = bestTaskAssignment[i];
+            int task_id = i;
+            robotsTaskAssignments[robot_id].push_back(task_id);
+        }
+        // bestTaskAssignment 包含了最优的任务分配方案
+        return robotsTaskAssignments;
+        
     }
-    // bestTaskAssignment 包含了最优的任务分配方案
-    // ...
-}
 }

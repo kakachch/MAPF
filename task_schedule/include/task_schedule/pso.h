@@ -1,9 +1,19 @@
-#include <task_schedule/task_schedule.h>
+/**
+ * @file pso.h
+ * @author Peng XianKang (718257480@qq.com)
+ * @brief 
+ * @date 2024-03-28
+ */
+#pragma once
+#ifndef PSO_H
+#define PSO_H
+#include "task_schedule/taskAndRobot.h"
 #include <vector>
 #include <iostream>
 #include <algorithm>
 #include <random>
 #include <limits>
+
 namespace task_schedule 
 {
     double w = 0.7, c1 = 1.4, c2 = 1.4;
@@ -20,7 +30,7 @@ namespace task_schedule
     };
     // 初始化粒子群 
     std::vector<Particle> initializeSwarm(size_t numParticles, 
-                                            std::vector<Task> tasks, std::vector<Robot> robots, 
+                                            const std::vector<Task> &tasks,const std::vector<Robot> &robots, 
                                             mapf_environment::BaseEnvironment *env);
     //计算适应度函数
     double calculateFitness(const std::vector<int>& taskAssignment, 
@@ -36,7 +46,8 @@ namespace task_schedule
                                     const std::vector<Task>& tasks, const std::vector<Robot>& robots, 
                                     mapf_environment::BaseEnvironment *env); 
 
-    void particleSwarmOptimization(const std::vector<Task>& tasks, const std::vector<Robot>& robots, size_t numParticles, int maxIterations, mapf_environment::BaseEnvironment *env);
+    std::vector<std::vector<int>> particleSwarmOptimization(const std::vector<Task>& tasks, const std::vector<Robot>& robots, size_t numParticles, int maxIterations, mapf_environment::BaseEnvironment *env);
             
 
 }
+#endif

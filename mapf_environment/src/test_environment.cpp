@@ -6,6 +6,7 @@
  * @LastEditTime : 2024-03-16 22:45:20
  */
 #include <mapf_environment/test_environment.h>
+#include <mapf_environment/orientation.h>
 
 namespace mapf_environment
 {
@@ -44,20 +45,25 @@ namespace mapf_environment
     bool TestEnvironment::getNeighbors(const Pose &current, std::vector<Pose> &neighbors, std::vector<double> &costs)
     {
         int map_x = current.location % map_width_, map_y = current.location / map_width_;
-        auto insert = [&](const int &target_x, const int &target_y, const double &cost)
+        int orientation = current.orientation;
+        auto checkAndInsert = [&](int target_x, int target_y, int orientation, double cost)
         {
             int target_id = target_y * map_width_ + target_x;
-            if (target_x < map_width_ && target_y < map_height_ && target_x >= 0 && target_y >= 0 && obstacle_set_.find(target_id) == obstacle_set_.end())
+            if (target_x < map_width_ && target_y < map_height_ && obstacle_set_.find(target_id) != obstacle_set_.end())
             {
-                neighbors.emplace_back(Pose(target_id, 0));
-                costs.emplace_back(cost);
+                return;
             }
+            neighbors.emplace_back(Pose(target_id, orientation));
+            costs.emplace_back(cost);
         };
-        insert(map_x + 1, map_y, 1.0);
-        insert(map_x - 1, map_y, 1.0);
-        insert(map_x, map_y + 1, 1.0);
-        insert(map_x, map_y - 1, 1.0);
-        insert(map_x, map_y, 0.5);
+
+        std::vector<int> next_orientation_vec, delta_x, delta_y;
+        getNextOrientation(orientation, next_orientation_vec, delta_x, delta_y);
+
+        for (size_t i = 0; i < next_orientation_vec.size(); ++i)
+        {
+            checkAndInsert(map_x + delta_x[i], map_y + delta_y[i], next_orientation_vec[i], 1.0);
+        }
 
         return true;
     }
