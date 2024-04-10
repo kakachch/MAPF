@@ -79,7 +79,7 @@ namespace task_schedule
     }
 
 
-    void updateVelocityAndPosition(Particle& particle, const std::vector<Particle>& swarm, const std::vector<Task>& tasks, const std::vector<Robot>& robots, mapf_environment::BaseEnvironment *env) 
+    double updateVelocityAndPosition(Particle& particle, const std::vector<Particle>& swarm, const std::vector<Task>& tasks, const std::vector<Robot>& robots, mapf_environment::BaseEnvironment *env) 
     {
         // 找到全局最优解
         std::vector<int> bestGlobalTaskAssignment = particle.bestTaskAssignment;
@@ -129,6 +129,7 @@ namespace task_schedule
             particle.bestFitness = particle.fitness;
             particle.bestTaskAssignment = particle.taskAssignment;
         }
+        return bestGlobalFitness;
     }
 
 
@@ -136,15 +137,24 @@ namespace task_schedule
     // 粒子群算法主循环
     std::vector<std::vector<int>> particleSwarmOptimization(const std::vector<Task>& tasks, const std::vector<Robot>& robots, size_t numParticles, int maxIterations, mapf_environment::BaseEnvironment *env) 
     {
+        double improvementThreshold = 1e-6;
         std::vector<Particle> swarm = initializeSwarm(numParticles, tasks, robots, env);
+        double bestGlobalFitness = 0.0, last_bestGlobalFitness = 0.0;
         for (int iteration = 0; iteration < maxIterations; ++iteration) 
         {
+            last_bestGlobalFitness = bestGlobalFitness;
             for (Particle& particle : swarm) 
             {
-                updateVelocityAndPosition(particle, swarm, tasks, robots, env);
+                
+                bestGlobalFitness = updateVelocityAndPosition(particle, swarm, tasks, robots, env);
+                
             }
             // 检查停止条件，例如适应度不再显著改善
-            
+            if(std::abs(bestGlobalFitness - last_bestGlobalFitness) < improvementThreshold)
+            {
+                break;
+            }
+            // std::cout << bestGlobalFitness << std::endl;
         }
         // 输出最终的最优解
         double bestFitness = std::numeric_limits<double>::max();

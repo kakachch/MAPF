@@ -42,7 +42,7 @@ namespace task_schedule
                                         int& goal_location, 
                                         mapf_environment::BaseEnvironment *env);
     //更新速度和位置
-    void updateVelocityAndPosition(Particle& particle, const std::vector<Particle>& swarm, 
+    double updateVelocityAndPosition(Particle& particle, const std::vector<Particle>& swarm, 
                                     const std::vector<Task>& tasks, const std::vector<Robot>& robots, 
                                     mapf_environment::BaseEnvironment *env); 
 

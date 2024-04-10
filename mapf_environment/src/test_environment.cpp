@@ -23,10 +23,11 @@ namespace mapf_environment
 
         free_map_.resize(map_width_ * map_height_, true);
 
-        for (const int &obstacle : obstacle_vec)
-        {
-            free_map_[obstacle] = false;
-        }
+        // for (const int &obstacle : obstacle_vec)
+        // {
+        //     free_map_[obstacle] = false;
+        // }
+        // setObstacles(obstacle_set_);
     }
 
     bool TestEnvironment::worldToId(const double &world_x, const double &world_y, int &id)
@@ -49,7 +50,7 @@ namespace mapf_environment
         auto checkAndInsert = [&](int target_x, int target_y, int orientation, double cost)
         {
             int target_id = target_y * map_width_ + target_x;
-            if (target_x < map_width_ && target_y < map_height_ && obstacle_set_.find(target_id) != obstacle_set_.end())
+            if (!(target_x < map_width_ && target_y < map_height_) || obstacle_set_.find(target_id) != obstacle_set_.end() || (free_map_[target_id] == false))
             {
                 return;
             }

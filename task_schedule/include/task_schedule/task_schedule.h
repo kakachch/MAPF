@@ -15,7 +15,7 @@ namespace task_schedule
 {
     class taskSchedule
     {
-    private:
+    public:
     std::vector<Task> tasks;
     std::vector<Robot> robots;
     mapf_environment::BaseEnvironment *env_;
